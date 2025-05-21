@@ -13,7 +13,7 @@ public class TextUtils {
 
     public static boolean isFuzzyMatch(String a, String b) {
         LevenshteinDistance distance = new LevenshteinDistance();
-        int threshold = 3; // permite hasta 3 errores
+        int threshold = 5; // permite hasta 3 errores
         return distance.apply(normalize(a), normalize(b)) <= threshold;
     }
 }
