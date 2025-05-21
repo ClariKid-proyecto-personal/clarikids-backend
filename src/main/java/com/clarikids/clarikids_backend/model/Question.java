@@ -19,6 +19,9 @@ public class Question {
 
     private boolean isAnswered;
 
+    @Column(nullable = false)
+    private String subject;
+
     // Relación OneToMany con Answer
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -39,4 +42,12 @@ public class Question {
 
     public List<Answer> getAnswers() { return answers; }
     public void setAnswers(List<Answer> answers) { this.answers = answers; }
+
+    public String getSubject() {
+        return subject;
+    }
+    
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 }
