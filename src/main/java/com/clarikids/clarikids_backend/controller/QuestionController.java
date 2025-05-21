@@ -1,5 +1,6 @@
 package com.clarikids.clarikids_backend.controller;
 
+import com.clarikids.clarikids_backend.dto.QuestionWithAnswerDTO;
 import com.clarikids.clarikids_backend.model.Question;
 import com.clarikids.clarikids_backend.repository.QuestionRepository;
 import com.clarikids.clarikids_backend.utils.TextUtils;
@@ -10,10 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/questions")
+@CrossOrigin(origins = "http://localhost:3000")
+
+ 
 public class QuestionController {
 
     @Autowired
@@ -31,19 +35,22 @@ public class QuestionController {
         return questionRepository.findAll();
     }
 
-    @GetMapping("/search")
-    public List<Question> searchQuestions(
-        @RequestParam String text,
+   @GetMapping("/search")
+    public List<QuestionWithAnswerDTO> searchQuestions(
+    @RequestParam String text,
         @RequestParam String subject) {
 
-        String normalizedInput = TextUtils.normalize(text);
+            String normalizedInput = TextUtils.normalize(text);
 
-        return questionRepository.findAll().stream()
-            .filter(q ->
-                TextUtils.normalize(q.getQuestionText()).contains(normalizedInput)
-                && q.getSubject().equalsIgnoreCase(subject)
-                && q.isAnswered())
-            .collect(Collectors.toList());
+            return questionRepository.findAll().stream()
+                .filter(q -> TextUtils.normalize(q.getSubject()).equalsIgnoreCase(TextUtils.normalize(subject)))
+                .filter(Question::isAnswered)
+                .filter(q -> TextUtils.isFuzzyMatch(q.getQuestionText(), normalizedInput))
+                .map(q -> new QuestionWithAnswerDTO(
+                    q.getQuestionText(),
+                    q.getSubject(),
+                    q.getAnswers().isEmpty() ? null : q.getAnswers().get(0).getAnswerText()))
+                .collect(Collectors.toList());
         }
 
     @DeleteMapping("/{id}")
