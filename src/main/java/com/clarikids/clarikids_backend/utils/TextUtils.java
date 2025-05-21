@@ -13,7 +13,19 @@ public class TextUtils {
 
     public static boolean isFuzzyMatch(String a, String b) {
         LevenshteinDistance distance = new LevenshteinDistance();
-        int threshold = 5; // permite hasta 3 errores
-        return distance.apply(normalize(a), normalize(b)) <= threshold;
+        int threshold = 3;
+    
+        String[] palabrasA = normalize(a).split(" ");
+        String[] palabrasB = normalize(b).split(" ");
+    
+        for (String palabraA : palabrasA) {
+            for (String palabraB : palabrasB) {
+                if (distance.apply(palabraA, palabraB) <= threshold) {
+                    return true; // con una palabra que coincida difusamente es suficiente
+                }
+            }
+        }
+    
+        return false;
     }
 }
