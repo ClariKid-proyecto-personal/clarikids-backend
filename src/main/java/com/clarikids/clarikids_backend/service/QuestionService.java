@@ -4,6 +4,7 @@ import com.clarikids.clarikids_backend.model.Question;
 import com.clarikids.clarikids_backend.model.Answer;
 import com.clarikids.clarikids_backend.repository.QuestionRepository;
 import com.clarikids.clarikids_backend.repository.AnswerRepository;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +21,19 @@ public class QuestionService {
     @Autowired
     private AnswerRepository answerRepository;
 
+    private static final int SIMILARITY_THRESHOLD = 5; 
+
     public String askQuestion(String questionText, String subject) {
         String normalizedInput = normalize(questionText);
+        LevenshteinDistance ld = new LevenshteinDistance();
 
         List<Question> allQuestions = questionRepository.findAll();
+
         for (Question q : allQuestions) {
             String normalizedDB = normalize(q.getQuestionText());
-            if (normalizedDB.contains(normalizedInput) || normalizedInput.contains(normalizedDB)) {
+            int distance = ld.apply(normalizedInput, normalizedDB);
+
+            if (distance <= SIMILARITY_THRESHOLD) {
                 q.setTimesAsked(q.getTimesAsked() + 1);
                 questionRepository.save(q);
 
@@ -39,7 +46,7 @@ public class QuestionService {
             }
         }
 
-        // Si no hay coincidencias, crear nueva pregunta
+        
         Question newQ = new Question();
         newQ.setQuestionText(questionText);
         newQ.setSubject(subject);
@@ -54,8 +61,8 @@ public class QuestionService {
     private String normalize(String input) {
         if (input == null) return "";
         return Normalizer.normalize(input.toLowerCase(), Normalizer.Form.NFD)
-                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
-                .replaceAll("[^a-z0-9 ]", "")
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "") // quita tildes
+                .replaceAll("[^a-z0-9 ]", "") // quita signos
                 .trim();
     }
 }

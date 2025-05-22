@@ -2,7 +2,7 @@ package com.clarikids.clarikids_backend.service;
 
 import com.clarikids.clarikids_backend.model.User;
 import com.clarikids.clarikids_backend.repository.UserRepository;
-import com.clarikids.clarikids_backend.security.JwtUtil;
+import com.clarikids.clarikids_backend.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class AuthService {
     private UserRepository userRepository;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtService jwtService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -29,7 +29,7 @@ public class AuthService {
 
             if (passwordEncoder.matches(password, user.getPassword())) {
                 // Genera el token usando username y role
-                return jwtUtil.generateToken(user.getUsername(), user.getRole());
+                return jwtService.generateToken(user); 
             }
         }
 

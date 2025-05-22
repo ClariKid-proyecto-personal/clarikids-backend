@@ -50,10 +50,9 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    // Métodos obligatorios de UserDetails (puedes mejorarlos luego si quieres usar roles reales)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // No usamos roles/granted authorities aún
+        return Collections.singleton(() -> "ROLE_" + role); // "ROLE_ALUMNO" o "ROLE_PROFESOR"
     }
 
     @Override
