@@ -22,10 +22,22 @@ public class Question {
     @Column(nullable = false)
     private String subject;
 
-    // Relación OneToMany con Answer
+    private int timesAsked = 1; // se inicializa en 1 al crear la pregunta
+
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Answer> answers;
+
+    // Constructores
+    public Question() {}
+
+    public Question(String questionText, String subject) {
+        this.questionText = questionText;
+        this.subject = subject;
+        this.createdAt = LocalDateTime.now();
+        this.isAnswered = false;
+        this.timesAsked = 1;
+    }
 
     // Getters y setters
     public Long getId() { return id; }
@@ -43,11 +55,14 @@ public class Question {
     public List<Answer> getAnswers() { return answers; }
     public void setAnswers(List<Answer> answers) { this.answers = answers; }
 
-    public String getSubject() {
-        return subject;
-    }
-    
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-}
+    public String getSubject() { return subject; }
+    public void setSubject(String subject) { this.subject = subject; }
+
+    public int getTimesAsked() { return timesAsked; }
+    public void setTimesAsked(int timesAsked) { this.timesAsked = timesAsked; }
+
+    public void incrementTimesAsked() {
+        this.timesAsked++;
+    };
+
+};

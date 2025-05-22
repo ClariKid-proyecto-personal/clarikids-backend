@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -21,7 +22,12 @@ public class AuthController {
         String password = body.get("password");
 
         String token = authService.login(username, password);
-        return Map.of("token", token);
+        String role = authService.getRoleByUsername(username);
+
+        return Map.of(
+            "token", token, 
+            "role", role
+        );
     }
 
     @PostMapping("/register")
