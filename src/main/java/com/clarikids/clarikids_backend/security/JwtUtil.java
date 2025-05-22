@@ -1,41 +1,44 @@
 package com.clarikids.clarikids_backend.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "clarikids_secret";
+    private static final String SECRET_KEY = "clarikidsSecretKey12345678901234567890123456789012"; // al menos 32 bytes
+    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     public String generateToken(String username, String role) {
-        return Jwts.builder()
-            .setSubject(username)
-            .claim("role", role)
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 día
-            .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-            .compact();
-    }
+        
+            return Jwts.builder()
+                    .setSubject(username)
+                    .claim("role", role) 
+                    .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) 
+                    .signWith(key)
+                    .compact();
+        }
 
     public String extractUsername(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token)
-                .getBody().getSubject();
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public String extractRole(String token) {
-        return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token)
-                .getBody().get("role");
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
-            return true;
-        } catch (JwtException e) {
-            return false;
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 }

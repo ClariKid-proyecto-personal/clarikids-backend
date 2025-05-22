@@ -44,11 +44,6 @@
   			<version>1.11.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -56,12 +51,25 @@
 		<dependency>
     		<groupId>org.postgresql</groupId>
     		<artifactId>postgresql</artifactId>
-    		<version>42.7.1</version> <!-- o la última disponible -->
+    		<version>42.7.1</version>
+    		<scope>runtime</scope>
 		</dependency>
 		<dependency>
-    		<groupId>io.jsonwebtoken</groupId>
-    		<artifactId>jjwt</artifactId>
-    		<version>0.9.1</version>
+  			<groupId>io.jsonwebtoken</groupId>
+  			<artifactId>jjwt-api</artifactId>
+  			<version>0.11.5</version>
+		</dependency>
+		<dependency>
+  			<groupId>io.jsonwebtoken</groupId>
+  			<artifactId>jjwt-impl</artifactId>
+  			<version>0.11.5</version>
+  			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+  			<groupId>io.jsonwebtoken</groupId>
+  			<artifactId>jjwt-jackson</artifactId> 
+  			<version>0.11.5</version>
+  			<scope>runtime</scope>
 		</dependency>
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
@@ -72,6 +80,11 @@
     		<artifactId>lombok</artifactId>
     		<version>1.18.30</version> <!-- última versión estable a 2025 -->
     		<scope>provided</scope>
+		</dependency>
+		<dependency>
+  			<groupId>org.glassfish.jaxb</groupId>
+  			<artifactId>jaxb-runtime</artifactId>
+  			<version>4.0.3</version>
 		</dependency>
 
 	</dependencies>

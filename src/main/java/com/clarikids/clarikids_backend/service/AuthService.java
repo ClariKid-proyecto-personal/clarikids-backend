@@ -28,6 +28,7 @@ public class AuthService {
             User user = optionalUser.get();
 
             if (passwordEncoder.matches(password, user.getPassword())) {
+                // Genera el token usando username y role
                 return jwtUtil.generateToken(user.getUsername(), user.getRole());
             }
         }
@@ -44,6 +45,7 @@ public class AuthService {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
+
         return userRepository.save(user);
     }
 }
