@@ -1,6 +1,6 @@
 package com.clarikids.clarikids_backend.security;
 
-import com.clarikids.clarikids_backend.model.User;
+
 import com.clarikids.clarikids_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
