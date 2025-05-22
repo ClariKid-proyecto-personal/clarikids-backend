@@ -48,4 +48,10 @@ public class AuthService {
 
         return userRepository.save(user);
     }
+
+    public String getRoleByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(User::getRole)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
 }
