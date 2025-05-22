@@ -22,6 +22,9 @@ public class User implements UserDetails {
 
     private String role; // "ALUMNO" o "PROFESOR"
 
+    public User() {
+        
+    }
     // Getters y setters normales
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

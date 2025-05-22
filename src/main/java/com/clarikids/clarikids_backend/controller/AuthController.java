@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthController {
 
     @Autowired
@@ -29,7 +29,6 @@ public class AuthController {
         String username = body.get("username");
         String password = body.get("password");
         String role = body.get("role");
-
         return authService.register(username, password, role);
     }
 }
