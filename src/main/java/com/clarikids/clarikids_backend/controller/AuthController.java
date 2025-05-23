@@ -17,16 +17,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
+    String username = body.get("username");
+    String password = body.get("password");
 
-        // Solo verificamos las credenciales, no devolvemos token
-        authService.login(username, password); // si no lanza excepción, está bien
+    String token = authService.login(username, password);
+    String role = authService.getRoleByUsername(username);
 
-        String role = authService.getRoleByUsername(username);
-
-        return Map.of("role", role); // solo devolvemos el rol
-    }
+    return Map.of(
+        "token", token,
+        "role", role
+    );
+}
 
     @PostMapping("/register")
     public User register(@RequestBody Map<String, String> body) {

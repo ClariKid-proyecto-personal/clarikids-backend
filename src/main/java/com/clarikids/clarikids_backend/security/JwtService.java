@@ -4,13 +4,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 import java.util.Date;
-import java.util.Base64;
+import java.security.Key;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY = Base64.getEncoder().encodeToString("mi_secreto_super_seguro".getBytes());
+    private static final String SECRET = "clarikids-s3creto-muyLargo-ySeguro-2025!";
+    private static final Key SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
 
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
@@ -20,8 +24,8 @@ public class JwtService {
                 .toList()
             )
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10h
-            .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
+            .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
             .compact();
     }
 
